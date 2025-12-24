@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Christmas Tree Python Code</title>
+  <style>
+    body { background-color: #001529; color: white; font-family: monospace; padding: 20px; white-space: pre; }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <h1>Christmas Tree Python Code</h1>
+  <pre>
+import turtle
+import random
+import time
+
+# 设置画幕
+screen = turtle.Screen()
+screen.setup(width=800, height=600)
+screen.bgcolor("#001529")  # 深蓝背景
+screen.title("浪漫圣诞树")
+
+# 创建画笔
+tree = turtle.Turtle(visible=False)
+tree.speed(0)
+tree.penup()
+
+# 画树干
+def draw_trunk():
+    tree.goto(0, -200)
+    tree.color("#5B3A29")
+    tree.begin_fill()
+    for _ in range(2):
+        tree.forward(30)
+        tree.left(90)
+        tree.forward(60)
+        tree.left(90)
+    tree.end_fill()
+
+# 画树身（分层三角形）
+def draw_tree():
+    levels = 7
+    start_width = 240
+    height_per_level = 30
+    tree.color("#0B6623")
+    for i in range(levels):
+        width = start_width - i * 30
+        left = -width // 2
+        right = width // 2
+        y = -200 + 60 + i * height_per_level
+        tree.goto(left, y)
+        tree.begin_fill()
+        tree.pendown()
+        tree.goto(right, y)
+        tree.goto(0, y + height_per_level)
+        tree.goto(left, y)
+        tree.end_fill()
+        tree.penup()
+
+# 画顶部星星
+def draw_star():
+    star = turtle.Turtle(visible=False)
+    star.speed(0)
+    star.penup()
+    star.goto(0, 50)
+    star.color("#FFD700")
+    star.begin_fill()
+    star.pendown()
+    for _ in range(5):
+        star.forward(40)
+        star.right(144)
+        star.forward(40)
+        star.left(72)
+    star.end_fill()
+
+# 在树上随机画彩灯
+def draw_lights(num_lights=50):
+    colors = ["#FF4040", "#FFD700", "#00E5EE", "#7CFC00", "#FF69B4"]
+    for _ in range(num_lights):
+        x = random.randint(-100, 100)
+        y = random.randint(-110, 100)
+        if y > (abs(x) - 20) * 0.6 - 200:  # 粗略判断点在树内
+            tree.goto(x, y)
+            tree.dot(random.randint(6, 10), random.choice(colors))
+
+# 创建雪花对象
+def create_snowflakes(count=60):
+    flakes = []
+    for _ in range(count):
+        flake = turtle.Turtle(visible=False)
+        flake.shape("circle")
+        flake.color("white")
+        flake.penup()
+        flake.speed(0)
+        flake.goto(random.randint(-400, 400), random.randint(0, 300))
+        flake.dx = random.uniform(-1, 1)
+        flake.dy = random.uniform(-2, -0.5)
+        flakes.append(flake)
+    return flakes
+
+# 更新雪花位置
+def update_snowflakes(flakes):
+    for flake in flakes:
+        x, y = flake.position()
+        x += flake.dx
+        y += flake.dy
+        if y < -300:
+            x = random.randint(-400, 400)
+            y = 300
+        if x < -400 or x > 400:
+            flake.dx *= -1
+        flake.goto(x, y)
+
+# 绘制静态树
+draw_trunk()
+draw_tree()
+draw_star()
+draw_lights()
+
+# 创建雪花列表
+snowflakes = create_snowflakes()
+
+# 动画循环：飘雪
+while True:
+    update_snowflakes(snowflakes)
+    screen.update()
+    time.sleep(0.03)
+  </pre>
+</body>
+</html>
